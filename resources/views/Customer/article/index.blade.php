@@ -46,11 +46,11 @@
                                 <div class="li-blog-details">
                                     <h3 class="li-blog-heading pt-25"><a href="{{route('get.article.detail',$article->id)}}" class="block-ellipsis">{{$article->a_name}}</a></h3>
                                     <div class="li-blog-meta">
-                                        <a class="author" href="#"><i class="fa fa-user"></i>{{isset($article->User->name)?$article->User->name:'Admin'}}</a>
+                                        <a class="author" href="#"><iø class="fa fa-user"></iø>{{isset($article->User->name)?$article->User->name:'Admin'}}</a>
                                         <a class="post-time" href="#"><i class="fa fa-calendar"></i> {{$article->created_at}}</a>
                                     </div>
                                     <p>{{$article->a_description}}</p>
-                                    <a class="read-more" href="{{route('get.article.detail',$article->id)}}">Xem thêm...</a>
+                                    <a class="read-more" href="{{route('get.article.detail', $article->id)}}">Xem thêm...</a>
                                 </div>
                             </div>
                         </div>
@@ -61,7 +61,7 @@
                         <div class="li-paginatoin-area text-center pt-25">
                             <div class="row">
                                 <div class="col-2 mx-auto">
-                                    {{($check_link==1)?$articles->links():''}}
+                                    {{ ($checkLink==1) ? $articles->links() : ''}}
                                 </div>
                             </div>
                         </div>

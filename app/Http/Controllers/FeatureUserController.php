@@ -8,13 +8,14 @@ use App\Models\Transaction;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Gloudemans\Shoppingcart\Cart;
 
 class FeatureUserController extends CustomerController
 {
     //
     public function getFormPay()
     {
-        $products = \Cart::content();
+        $products = Cart::content();
         $data = [
             'products' => $products
         ];
@@ -23,7 +24,7 @@ class FeatureUserController extends CustomerController
     public function saveInfoShoppingCart(Request $request)
     {
         // get value in total money cart
-        $totalMoney = str_replace(',','',\Cart::subtotal(0));
+        $totalMoney = str_replace(',','',Cart::subtotal(0));
         // insert data transaction and get id then insert
         $transactionId = Transaction::insertGetId([
             'tr_user_id'=> Auth::user()->id,
@@ -36,7 +37,7 @@ class FeatureUserController extends CustomerController
         ]);
         // check exist id transaction above and insert order
         if($transactionId){
-            $products = \Cart::content();
+            $products = Cart::content();
             foreach($products as $product)
             {
                 Order::insert([
@@ -49,7 +50,7 @@ class FeatureUserController extends CustomerController
                     'updated_at'=>Carbon::now()
                 ]);
             }
-            \Cart::destroy();
+            Cart::destroy();
         }
         return redirect()->route('home');
     }

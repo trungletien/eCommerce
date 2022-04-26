@@ -3,39 +3,54 @@
 namespace App\Http\Controllers;
 
 use App\Models\Article;
+use App\Repositories\ArticleRepository;
+use App\Repositories\CategoryRepository;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ArticleController extends CustomerController
 {
+    private $articleRepo;
+    private $categoryRepo;
+
+    public function __construct(ArticleRepository $articleRepo, CategoryRepository $categoryRepo)
+    {
+        $this->categoryRepo = $categoryRepo;
+        $this->articleRepo = $articleRepo;
+        parent::__construct($categoryRepo);
+    }
+
     //
     public function index()
     {
-        $count_article = Article::where('a_status','1')->count();
-        $check_link=0;
-        if($count_article>7)
-        {
-            $articles = Article::where('a_status','1')->paginate(3);
-            $check_link=1;
+        $countArticle = $this->articleRepo->getAll()->count();
+
+        $checkLink = 0;
+        if ($countArticle > 7) {
+            $articles = $this->articleRepo->findByStatus('1', 6);
+            $checkLink = 1;
+        } else {
+            $articles = $this->articleRepo->findByStatus('1');
         }
-        else
-        {
-            $articles = Article::where('a_status','1')->get();
-        }
-        
+
         $data = [
             'articles' => $articles,
-            'check_link' => $check_link 
+            'checkLink' => $checkLink
         ];
+
         return view('customer.article.index',$data);
     }
+
     public function getDetailArticle($id)
     {
-        $articles = Article::where('id','<>',$id)->limit(5)->get();
-        $article = Article::find($id);
+        $articles = $this->articleRepo->getAnother($id, 5);
+        $article = $this->articleRepo->find($id);
+
         $data = [
             'article' => $article,
             'articles' => $articles
         ];
+
         return view('customer.article.detail',$data);
     }
 }

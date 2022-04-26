@@ -3,11 +3,19 @@
 namespace App\Http\Controllers;
 
 use App\Models\FavoriteProduct;
+use App\Repositories\CategoryRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class FavoriteProductController extends CustomerController
 {
+    private $favoriteProduct;
+
+    public function __construct(CategoryRepository $categoryRepo)
+    {
+        parent::__construct($categoryRepo);
+    }
+
     public function index()
     {
         $products = Auth::user()->FavoriteProduct;
@@ -29,7 +37,7 @@ class FavoriteProductController extends CustomerController
     {
         if($request->ajax())
         {
-            // check exist produt in my list favorite product 
+            // check exist produt in my list favorite product
             foreach (Auth::user()->favoriteProduct as $product)
             {
                 if($product->id == $id){
